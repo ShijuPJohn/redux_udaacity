@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+### Instructions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+For this exercise, imagine that you're building a section of a simple video game
+website where we should be able to add users and display users, along with the
+number of games he/she has played.
 
-## Available Scripts
+**Task**: Create a React app that lets us add a user's first name, last name, and
+username. When the user is added, the number of games that he/she has played is
+defaulted to 0. Each username has to be unique, so we cannot add multiple users
+with the same username. When someone clicks "Add" but the username already
+exists, the app should not allow for a duplicate user to be added and should
+show an error message instead.
 
-In the project directory, you can run:
+The app should also display a list of users, specifically their usernames
+and the number of games they've played (which is defaulted to 0). If someone
+tries to add a user when one of the fields is empty, the "Add" button should
+be disabled.
 
-### `npm start`
+We should also have a button that lets us toggle between showing and hiding
+the number of games the users have played. For example, the button can start
+out as "Hide the Number of Games Played" and the app can display "username1
+played 0 games." Clicking that button should change the button text to
+"Show the Number of Games Played" and the displayed username and score can be
+changed to "username1 played \* games."
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+State management is at the heart of React. It allows us to have a single source
+of truth for our entire application. That means that we don't need to make sure
+that our data is synched across multiple components; React does it for us. It
+happens via unidirectional data flow: parent components pass properties to
+child components as props.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Remember that state cannot be modified outside of the component in which it is
+declared. If a child component needs to pass some data back up to the parent (e.g. a
+form that conveys the new user information to the component that holds that the
+users piece of state), we'll need to pass callbacks from the component that holds
+state all the way down to the required component. By calling those callbacks, child
+components are able to pass data to back up to their parents, which are able to
+modify their state. Props can go through multiple components to get to the
+component they ultimately need to reach.
 
-### `npm test`
+This practice exercise will help you cement your understanding of where to put
+state, how to update and access state, when to use stateless functional
+components, and how to use controlled components.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We recommend following the [Thinking in React Guide](https://reactjs.org/docs/thinking-in-react.html when you're building your
+React applications.
 
-### `npm run build`
+#### Step 1. Break down the app into a hierarchy of components. Draw a box around each React component.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Step 2. Determine the data in our app.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Step 3. Figure out the data that should be a part of our state:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1.  Is it passed in from a parent via props? If so, it probably isn’t state.
 
-### `npm run eject`
+2.  Does it remain unchanged over time? If so, it probably isn’t state.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3.  Can you compute it based on any other state or props in your component?
+    If so, it isn’t state.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Step 4. Identify where each piece of state lives.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1.  Identify every component that renders something based on that state.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2.  If multiple components need the same piece of state, put that piece of state into those components' parent-most component.
 
-## Learn More
+If you can’t find a component where it makes sense to own the state, create
+a new component simply for holding the state and add it somewhere in the
+hierarchy above the common owner component.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Step 5. Add Inverse Data Flow.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+State should be updated inside of the component where that state lives.
+If we pass state down from component A to component B and then need to update
+the state based on something that happened in component B, we can do so via
+callbacks: Component A will not only pass state to Component B, but it will
+also pass a callback function that will fire whenever the state should be updated.
